@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>鸭子赛跑 - 科学成绩分析可视化</title>
+    <!-- 第三方库 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="main-body" class="h-screen w-screen relative select-none overflow-hidden bg-sky">
+
+    <!-- 粒子容器 -->
+    <div id="particles-container" class="absolute inset-0 pointer-events-none z-0"></div>
+
+    <!-- 赛道区域 -->
+    <div id="race-track">
+        <!-- 鸭子跑道将通过 JS 动态生成 -->
+    </div>
+
+    <!-- 分数线容器 -->
+    <div id="score-lines-container"></div>
+
+    <!-- 终点线 -->
+    <div class="finish-line"></div>
+
+    <!-- 倒数动画 -->
+    <div id="countdown-3" class="countdown">3</div>
+    <div id="countdown-2" class="countdown">2</div>
+    <div id="countdown-1" class="countdown">1</div>
+    <div id="countdown-go" class="countdown">GO!</div>
+
+    <!-- 设置按钮 (左下角) -->
+    <div class="absolute bottom-5 left-5 z-50 flex gap-4">
+        <button onclick="toggleSettings()"
+            class="btn-icon bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all text-blue-600">
+            <i class="fas fa-cog text-xl"></i>
+        </button>
+        <button onclick="toggleAudio()"
+            class="btn-icon bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all text-purple-600">
+            <i id="icon-audio" class="fas fa-volume-up text-xl"></i>
+        </button>
+        <button id="btn-smooth" onclick="toggleSmoothMode()"
+            class="btn-icon bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all text-green-600"
+            title="流畅模式：关闭特效，提升性能">
+            <i id="icon-smooth" class="fas fa-bolt text-xl"></i>
+        </button>
+    </div>
+
+    <!-- 控制按钮 (右下角) -->
+    <div class="absolute bottom-5 right-5 z-50 flex gap-4">
+        <button onclick="showGradeLeaderboardSelector()"
+            class="btn-icon bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg hover:scale-105 transition-transform flex items-center gap-2">
+            <i class="fas fa-school"></i> 年级排行榜
+        </button>
+        <button onclick="showLeaderboard()"
+            class="btn-icon bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg hover:scale-105 transition-transform flex items-center gap-2">
+            <i class="fas fa-trophy"></i> 排行榜
+        </button>
+        <button id="btn-start" onclick="toggleRace()"
+            class="btn-icon bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 py-3 rounded-full shadow-lg font-bold text-xl hover:scale-105 transition-transform flex items-center gap-2">
+            <i id="icon-play" class="fas fa-play"></i> 开始比赛
+        </button>
+    </div>
+
+    <!-- 设置面板 -->
+    <div id="settings-menu"
+        class="fixed bottom-24 left-5 w-80 bg-white/95 backdrop-blur rounded-2xl shadow-2xl menu-hidden z-50 max-h-[70vh] flex flex-col border border-white/50">
+        <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 rounded-t-2xl">
+            <h3 class="font-bold text-lg text-gray-800"><i class="fas fa-sliders-h mr-2 text-blue-500"></i>游戏设置</h3>
+            <button onclick="toggleSettings()"
+                class="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200/50 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="overflow-y-auto custom-scroll p-2 flex-1 space-y-2">
+            <!-- 班级导入 -->
+            <div class="bg-blue-50/50 rounded-xl p-3 border border-blue-100/50">
+                <div class="flex justify-between items-center cursor-pointer mb-2"
+                    onclick="toggleAccordion('import-section')">
+                    <span class="font-bold text-gray-700 text-sm"><i
+                            class="fas fa-file-import mr-2 text-blue-500"></i>班级数据导入</span>
+                    <i id="import-section-icon"
+                        class="fas fa-chevron-down text-gray-400 text-xs transition-transform"></i>
+                </div>
+                <div id="import-section" class="grid grid-cols-4 gap-2 text-xs">
+                    <button onclick="importClassData('51班')" class="class-btn">51班</button>
+                    <button onclick="importClassData('52班')" class="class-btn">52班</button>
+                    <button onclick="importClassData('53班')" class="class-btn">53班</button>
+                    <button onclick="importClassData('54班')" class="class-btn">54班</button>
+                    <button onclick="importClassData('55班')" class="class-btn">55班</button>
+                    <button onclick="importClassData('61班')" class="class-btn">61班</button>
+                    <button onclick="importClassData('62班')" class="class-btn">62班</button>
+                    <button onclick="importClassData('63班')" class="class-btn">63班</button>
+                    <button onclick="importClassData('64班')" class="class-btn">64班</button>
+                    <button onclick="importClassData('65班')" class="class-btn">65班</button>
+                </div>
+            </div>
+
+            <!-- 比赛模式 -->
+            <div class="bg-purple-50/50 rounded-xl p-3 border border-purple-100/50">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-gray-700 text-sm"><i
+                            class="fas fa-flag-checkered mr-2 text-purple-500"></i>比赛模式</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div id="mode-btn-sameTime" onclick="changeRaceMode('sameTime')"
+                        class="option-card active bg-white p-2 rounded-lg text-center shadow-sm">
+                        <div class="text-xl mb-1">⏱️</div>
+                        <div class="text-xs font-bold text-gray-600">同时冲线</div>
+                    </div>
+                    <div id="mode-btn-sameSpeed" onclick="changeRaceMode('sameSpeed')"
+                        class="option-card bg-white p-2 rounded-lg text-center shadow-sm">
+                        <div class="text-xl mb-1">🚀</div>
+                        <div class="text-xs font-bold text-gray-600">相同速度</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 背景场景 -->
+            <div class="bg-green-50/50 rounded-xl p-3 border border-green-100/50">
+                <div class="flex justify-between items-center cursor-pointer mb-2"
+                    onclick="toggleAccordion('bg-section')">
+                    <span class="font-bold text-gray-700 text-sm"><i
+                            class="fas fa-image mr-2 text-green-500"></i>场景选择</span>
+                    <i id="bg-section-icon"
+                        class="fas fa-chevron-down text-gray-400 text-xs transition-transform transform rotate-180"></i>
+                </div>
+                <div id="bg-section" class="grid grid-cols-3 gap-2">
+                    <div id="bg-btn-sky" onclick="changeBg('sky')"
+                        class="option-card active bg-blue-100 p-2 rounded-lg text-center">
+                        <div class="text-xs font-bold text-blue-800">蓝天</div>
+                    </div>
+                    <div id="bg-btn-water" onclick="changeBg('water')"
+                        class="option-card bg-blue-600 p-2 rounded-lg text-center">
+                        <div class="text-xs font-bold text-white">深海</div>
+                    </div>
+                    <div id="bg-btn-space" onclick="changeBg('space')"
+                        class="option-card bg-indigo-900 p-2 rounded-lg text-center">
+                        <div class="text-xs font-bold text-white">宇宙</div>
+                    </div>
+                    <div id="bg-btn-snow" onclick="changeBg('snow')"
+                        class="option-card bg-gray-200 p-2 rounded-lg text-center">
+                        <div class="text-xs font-bold text-gray-600">雪地</div>
+                    </div>
+                    <div id="bg-btn-autumn" onclick="changeBg('autumn')"
+                        class="option-card bg-orange-200 p-2 rounded-lg text-center">
+                        <div class="text-xs font-bold text-orange-800">秋天</div>
+                    </div>
+                    <div id="bg-btn-forest" onclick="changeBg('forest')"
+                        class="option-card bg-green-700 p-2 rounded-lg text-center">
+                        <div class="text-xs font-bold text-green-100">森林</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 皮肤选择 -->
+            <div class="bg-yellow-50/50 rounded-xl p-3 border border-yellow-100/50">
+                <div class="flex justify-between items-center cursor-pointer mb-2"
+                    onclick="toggleAccordion('skin-section')">
+                    <span class="font-bold text-gray-700 text-sm"><i
+                            class="fas fa-tshirt mr-2 text-yellow-500"></i>选手皮肤</span>
+                    <i id="skin-section-icon"
+                        class="fas fa-chevron-down text-gray-400 text-xs transition-transform transform rotate-180"></i>
+                </div>
+                <div id="skin-section" class="grid grid-cols-4 gap-2">
+                    <div id="skin-btn-duck" onclick="changeSkin('duck')"
+                        class="option-card active bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="duck"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">小黄鸭</span>
+                    </div>
+                    <div id="skin-btn-cat" onclick="changeSkin('cat')"
+                        class="option-card bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="cat"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">猫咪巴士</span>
+                    </div>
+                    <div id="skin-btn-rabbit" onclick="changeSkin('rabbit')"
+                        class="option-card bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="rabbit"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">胡萝卜车</span>
+                    </div>
+                    <div id="skin-btn-boat" onclick="changeSkin('boat')"
+                        class="option-card bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="boat"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">帆船</span>
+                    </div>
+                    <div id="skin-btn-dino" onclick="changeSkin('dino')"
+                        class="option-card bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="dino"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">恐龙</span>
+                    </div>
+                    <div id="skin-btn-dragon" onclick="changeSkin('dragon')"
+                        class="option-card bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="dragon"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">龙舟</span>
+                    </div>
+                    <div id="skin-btn-snowman" onclick="changeSkin('snowman')"
+                        class="option-card bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="snowman"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">雪人</span>
+                    </div>
+                    <div id="skin-btn-fish" onclick="changeSkin('fish')"
+                        class="option-card bg-white p-1 rounded-lg flex flex-col items-center">
+                        <div class="skin-preview w-8 h-8" data-type="fish"></div>
+                        <span class="text-[10px] text-gray-500 mt-1">锦鲤</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据操作 -->
+            <div class="bg-gray-50/50 rounded-xl p-3 border border-gray-100/50">
+                <span class="font-bold text-gray-700 text-sm block mb-2"><i
+                        class="fas fa-database mr-2 text-gray-500"></i>数据管理</span>
+                <div class="flex gap-2">
+                    <button onclick="downloadTemplate()"
+                        class="flex-1 bg-white border border-gray-200 text-gray-600 py-2 rounded-lg text-xs font-bold hover:bg-gray-50 shadow-sm transition-colors">
+                        <i class="fas fa-download mr-1"></i>下载模板
+                    </button>
+                    <label
+                        class="flex-1 bg-blue-500 text-white py-2 rounded-lg text-xs font-bold hover:bg-blue-600 shadow-sm text-center cursor-pointer transition-colors flex items-center justify-center">
+                        <i class="fas fa-upload mr-1"></i>导入Excel
+                        <input type="file" onchange="handleFileUpload(this)" accept=".xlsx, .xls" class="hidden">
+                    </label>
+                </div>
+                <button onclick="generateDemoData()"
+                    class="w-full mt-2 bg-gray-100 text-gray-500 py-1.5 rounded-lg text-xs hover:bg-gray-200 transition-colors">
+                    重置为演示数据
+                </button>
+            </div>
+
+            <!-- 比赛时长控制 -->
+            <div class="bg-gray-50/50 rounded-xl p-3 border border-gray-100/50">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-gray-700 text-sm"><i
+                            class="fas fa-stopwatch mr-2 text-gray-500"></i>比赛时长</span>
+                    <span id="durationValue" class="text-blue-600 font-bold font-mono text-sm">20s</span>
+                </div>
+                <input type="range" id="durationRange" min="5" max="60" value="30"
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            </div>
+        </div>
+
+        <div class="p-3 bg-gray-50/50 border-t border-gray-100 text-[10px] text-center text-gray-400 rounded-b-2xl">
+            Powered by 抖音@李翔在湘西 · 科学可视化 v2.1
+        </div>
+    </div>
+
+    <!-- 学生详情弹窗 -->
+    <div id="student-modal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/40 backdrop-blur-sm animate-modal-in"
+        onclick="closeModal()">
+        <div class="bg-white rounded-2xl p-6 w-80 shadow-2xl transform transition-all scale-100 relative overflow-hidden"
+            onclick="event.stopPropagation()">
+            <!-- 背景装饰 -->
+            <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-blue-400 to-indigo-500"></div>
+            <div class="absolute top-16 right-4 w-16 h-16 bg-white/10 rounded-full blur-xl"></div>
+
+            <div class="relative z-10 flex flex-col items-center mt-4">
+                <div id="modal-duck-icon" class="w-24 h-24 mb-4 drop-shadow-xl"></div>
+                <h2 id="modal-name" class="text-3xl font-black text-gray-800 mb-1">学生姓名</h2>
+                <div id="modal-rank"
+                    class="text-white bg-yellow-400 px-3 py-1 rounded-full text-sm font-bold shadow-md mb-6">第 1 名</div>
+
+                <div class="w-full grid grid-cols-2 gap-4">
+                    <div class="bg-gray-50 rounded-xl p-3 text-center border border-gray-100">
+                        <div class="text-xs text-gray-400 mb-1">总成绩</div>
+                        <div id="modal-total" class="text-2xl font-black text-blue-600 font-mono">98.5</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-3 text-center border border-gray-100">
+                        <div class="text-xs text-gray-400 mb-1">科学</div>
+                        <div id="modal-score-science" class="text-2xl font-black text-indigo-600 font-mono">98.5</div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeModal()"
+                class="absolute top-3 right-3 text-white/80 hover:text-white transition-colors text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 防伪水印 (仅供展示) -->
+    <div class="watermark">Designed by 抖音@李翔在湘西</div>
+    <div class="watermark-overlay"></div>
+    <div class="hidden-copyright">版权所有 © 2024 李翔在湘西. 保留所有权利. 禁止商业使用.</div>
+
+    <!-- 引用外部脚本 -->
+    <!-- 1.先加载数据 -->
+    <script src="class_data.js"></script>
+    <!-- 2.再加载逻辑 -->
+    <script src="script.js"></script>
+</body>
+
+</html>

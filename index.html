@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科学吴老师课堂互动百宝箱</title>
+    <style>
+        /* 极简重置，清空默认边距，保证无任何多余代码 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 页面整体风格：浅色背景保护视力，大字体，居中布局 */
+        body {
+            font-family: 'Microsoft YaHei', 'Comic Sans MS', sans-serif;
+            background-color: #f4f9f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* 主标题样式：醒目、可爱 */
+        h1 {
+            font-size: 3.5rem;
+            color: #ff6b81;
+            margin-bottom: 50px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+            letter-spacing: 2px;
+        }
+
+        /* 按钮容器：竖向排列，间距舒适 */
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; 
+            width: 100%;
+            max-width: 500px;
+            padding: 0 20px;
+        }
+
+        /* 核心导航按钮样式：圆角、立体、大字、易点击 */
+        .nav-button {
+            display: block;
+            text-decoration: none;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            padding: 22px 20px;
+            border-radius: 25px;
+            border: 4px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+            transition: all 0.1s ease;
+        }
+
+        /* 鼠标悬停：微微浮起 */
+        .nav-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 13px 0 rgba(0,0,0,0.15);
+        }
+        
+        /* 鼠标点击：按下效果 */
+        .nav-button:active {
+            transform: translateY(8px);
+            box-shadow: 0 0px 0 rgba(0,0,0,0.15);
+        }
+
+        /* 专属配色：活泼童趣的色彩 */
+        .btn-1 { background-color: #ffa502; } /* 橙色 - 抽奖Win10 */
+        .btn-2 { background-color: #e056a0; } /* 粉紫色 - 抽奖Win7 */
+        .btn-3 { background-color: #1e90ff; } /* 蓝色 - 成绩对比 */
+        .btn-4 { background-color: #2ed573; } /* 绿色 - 鸭子赛跑 */
+
+        /* 小提示文字 */
+        .hint {
+            font-size: 0.85rem;
+            font-weight: normal;
+            opacity: 0.85;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* 底部装饰文字 */
+        .footer-text {
+            margin-top: 50px;
+            font-size: 1.5rem;
+            color: #a4b0be;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌟 科学吴老师课堂互动百宝箱 🌟</h1>
+
+    <div class="btn-container">
+        <!-- 抽奖Win10：云端自动保存 -->
+        <a href="lottery-win10/index.html" target="_blank" class="nav-button btn-1">
+            🎰 抽奖积分（Win10）
+            <span class="hint">☁️ 数据自动保存到云端</span>
+        </a>
+        
+        <!-- 抽奖Win7：云端自动保存 -->
+        <a href="lottery-win7/index.html" target="_blank" class="nav-button btn-2">
+            🎁 抽奖积分（Win7）
+            <span class="hint">☁️ 数据自动保存到云端</span>
+        </a>
+        
+        <!-- 成绩对比：直接打开HTML即可 -->
+        <a href="score-compare/index.html" target="_blank" class="nav-button btn-3">
+            📊 成绩对比展示
+        </a>
+        
+        <!-- 鸭子赛跑：直接打开HTML即可 -->
+        <a href="duck-race/index.html" target="_blank" class="nav-button btn-4">
+            🦆 鸭子赛跑成绩展示
+        </a>
+    </div>
+
+    <div class="footer-text">
+        ✨ 点击按钮即可上课使用 ✨
+    </div>
+
+</body>
+</html>

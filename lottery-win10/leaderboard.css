@@ -1,0 +1,966 @@
+/* Leaderboard Modal - Cute White Theme */
+#leaderboard-sidebar {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    /* Start slightly smaller for pop effect */
+    width: 75vw;
+    max-width: none;
+    height: 90vh;
+    /* Fixed height for modal feels */
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    /* Higher z-index to be above everything */
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    color: #333;
+    font-family: 'Fredoka One', cursive;
+    /* Cute Font */
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Bouncy pop effect */
+    border: 4px solid #00f3ff;
+    /* Cute tech border */
+}
+
+#leaderboard-sidebar.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Close Button */
+#leaderboard-sidebar button.absolute {
+    top: 16px;
+    right: 16px;
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+}
+
+#leaderboard-sidebar button.absolute:hover {
+    background: #ff7675 !important;
+    color: white !important;
+    transform: rotate(90deg);
+}
+
+.leaderboard-trigger-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid #00f3ff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: #00f3ff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+}
+
+.leaderboard-trigger-btn:hover {
+    background: rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+}
+
+#leaderboard-sidebar h2 {
+    color: #00f3ff !important;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+}
+
+/* Leaderboard List Scrollbar */
+#leaderboard-list {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 12px;
+    scrollbar-width: auto;
+    scrollbar-color: #00f3ff rgba(0, 0, 0, 0.1);
+
+    /* Two Column Layout */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-content: start;
+}
+
+#leaderboard-list::-webkit-scrollbar {
+    width: 18px;
+}
+
+#leaderboard-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 15px;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00f3ff 0%, #0891b2 100%);
+    border-radius: 10px;
+    border: 3px solid #f8fafc;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #22d3ee 0%, #06b6d4 100%);
+}
+
+.rank-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: default;
+    min-height: 50px;
+}
+
+.rank-item:hover {
+    background: #ffffff;
+    border-color: #00f3ff;
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 243, 255, 0.15);
+}
+
+.rank-number {
+    font-weight: bold;
+    font-family: 'Fredoka One', cursive;
+    width: 40px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 1.2em;
+}
+
+/* Cute Rank Colors - TOP 3 */
+.rank-1 {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border-color: #fcd34d;
+    border-width: 2px;
+    box-shadow: 0 0 12px rgba(252, 211, 77, 0.4), 0 4px 8px rgba(0, 0, 0, 0.08);
+    min-height: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+.rank-1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.15), transparent);
+    animation: rank-shine 3s ease-in-out infinite;
+}
+
+@keyframes rank-shine {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+.rank-1 .rank-number {
+    color: #f59e0b;
+    font-size: 1.5em;
+    text-shadow: none;
+}
+
+.rank-1 .rank-name-text {
+    color: #92400e;
+    font-size: 1.5em;
+}
+
+/* Gold Medal */
+
+.rank-2 {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-color: #cbd5e1;
+    border-width: 2px;
+    box-shadow: 0 0 8px rgba(203, 213, 225, 0.5), 0 3px 6px rgba(0, 0, 0, 0.06);
+    min-height: 58px;
+}
+
+.rank-2 .rank-number {
+    color: #94a3b8;
+    font-size: 1.4em;
+}
+
+.rank-2 .rank-name-text {
+    font-size: 1.45em;
+}
+
+/* Silver */
+
+.rank-3 {
+    background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+    border-color: #fca5a5;
+    border-width: 2px;
+    box-shadow: 0 0 8px rgba(252, 165, 165, 0.4), 0 3px 6px rgba(0, 0, 0, 0.06);
+    min-height: 56px;
+}
+
+.rank-3 .rank-number {
+    color: #f43f5e;
+    font-size: 1.35em;
+}
+
+.rank-3 .rank-name-text {
+    font-size: 1.4em;
+}
+
+/* Bronze */
+
+/* --- Medal Emoji for Top 3 --- */
+.rank-medal {
+    font-size: 1.8em;
+    line-height: 1;
+    display: inline-block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    animation: medal-bounce 2s ease-in-out infinite;
+}
+
+@keyframes medal-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* --- TOP 4-10: Elite Styling --- */
+.rank-top10 {
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    border-color: #c4b5fd;
+    border-width: 2px;
+    border-left: 4px solid;
+    border-image: linear-gradient(180deg, #8b5cf6, #06b6d4) 1;
+    min-height: 54px;
+    position: relative;
+}
+
+.rank-top10:hover {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    border-color: #a78bfa;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.2);
+}
+
+.rank-top10 .rank-name-text {
+    font-size: 1.35em;
+}
+
+/* Elite Number Badge */
+.rank-number-elite {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    color: #fff;
+    font-size: 0.85em;
+    font-weight: 800;
+    box-shadow: 0 2px 6px rgba(109, 40, 217, 0.4);
+    line-height: 1;
+}
+
+/* Individual rank accent colors for 4-10 */
+.rank-top10-4 { border-image: linear-gradient(180deg, #8b5cf6, #a855f7) 1; }
+.rank-top10-5 { border-image: linear-gradient(180deg, #7c3aed, #8b5cf6) 1; }
+.rank-top10-6 { border-image: linear-gradient(180deg, #6d28d9, #7c3aed) 1; }
+.rank-top10-7 { border-image: linear-gradient(180deg, #5b21b6, #6d28d9) 1; }
+.rank-top10-8 { border-image: linear-gradient(180deg, #4c1d95, #5b21b6) 1; }
+.rank-top10-9 { border-image: linear-gradient(180deg, #3b0764, #4c1d95) 1; }
+.rank-top10-10 { border-image: linear-gradient(180deg, #2e1065, #3b0764) 1; }
+
+/* --- Elite Divider after Rank 10 --- */
+.rank-elite-divider {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 8px 0;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1em;
+    color: #a78bfa;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 4px 0;
+}
+
+.rank-elite-divider::before,
+.rank-elite-divider::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #c4b5fd, transparent);
+}
+
+.rank-name {
+    flex: 1;
+    margin-left: 12px;
+    font-weight: 500;
+    color: #334155;
+    /* Dark text */
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rank-name span {
+    /* Class tag */
+    font-size: 0.75em;
+    color: #64748b;
+    background: #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.rank-score {
+    font-family: 'Fredoka One', cursive;
+    color: #00cec9;
+    /* Cute Teal */
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+/* ========================================
+   🎮 TITLE/RANK BADGE SYSTEM
+   12 Tiers from 0-Infinity points
+   ======================================== */
+
+.title-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 22px;
+    font-size: 1.1em;
+    font-weight: bold;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.title-badge span:first-child {
+    font-size: 1.2em;
+    line-height: 1;
+    display: inline-block;
+    width: 1.2em;
+    text-align: center;
+}
+
+.title-badge span:last-child {
+    font-size: 1em;
+}
+
+/* Tier 1: 0-100 科学小萌新 - Fresh Green */
+.title-tier-1 {
+    background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
+    color: #2d5a40;
+    border: 1px solid #7bc89c;
+}
+
+/* Tier 2: 101-200 科学探索者 - Sky Blue */
+.title-tier-2 {
+    background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);
+    color: #1a5276;
+    border: 1px solid #5dade2;
+    box-shadow: 0 0 8px rgba(93, 173, 226, 0.4);
+}
+
+/* Tier 3: 201-300 科学小达人 - Violet */
+.title-tier-3 {
+    background: linear-gradient(135deg, #d8b4fe 0%, #a78bfa 100%);
+    color: #4c1d95;
+    border: 1px solid #a78bfa;
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+}
+
+/* Tier 4: 301-400 科学先锋 - Deep Blue */
+.title-tier-4 {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    color: #ffffff;
+    border: 1px solid #2563eb;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Tier 5: 401-500 科学之星 - Orange Gold */
+.title-tier-5 {
+    background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+    color: #7c2d12;
+    border: 1px solid #d97706;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.7);
+    animation: twinkle-star 1.5s ease-in-out infinite;
+}
+
+/* Tier 6: 501-600 科学精英 - Pure Gold */
+.title-tier-6 {
+    background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 50%, #d97706 100%);
+    color: #78350f;
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    animation: gold-shine 2s ease-in-out infinite;
+}
+
+/* Tier 7: 601-700 科学大师 - Rose Gradient */
+.title-tier-7 {
+    background: linear-gradient(135deg, #f472b6 0%, #ec4899 50%, #db2777 100%);
+    color: #ffffff;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+    animation: rainbow-border 3s linear infinite;
+}
+
+.title-tier-7::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(90deg, #f472b6, #a855f7, #3b82f6, #22d3ee, #22c55e, #fbbf24, #f472b6);
+    background-size: 200% 100%;
+    border-radius: 22px;
+    z-index: -1;
+    animation: rainbow-move 2s linear infinite;
+}
+
+/* Tier 8: 701-800 科学王者 - Royal Purple Gold */
+.title-tier-8 {
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #fbbf24 100%);
+    color: #ffffff;
+    border: 2px solid #fbbf24;
+    box-shadow:
+        0 0 25px rgba(168, 85, 247, 0.7),
+        0 0 50px rgba(251, 191, 36, 0.4);
+    animation: royal-glow 2s ease-in-out infinite;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.title-tier-8::after {
+    content: '👑';
+    position: absolute;
+    top: -8px;
+    right: -5px;
+    font-size: 12px;
+    animation: float-crown 2s ease-in-out infinite;
+}
+
+/* Tier 9: 801-900 科学传奇 - Cosmic Purple */
+.title-tier-9 {
+    background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #7c3aed 100%);
+    color: #e0e7ff;
+    border: 2px solid #a855f7;
+    box-shadow:
+        0 0 30px rgba(124, 58, 237, 0.8),
+        0 0 60px rgba(168, 85, 247, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+    animation: cosmic-pulse 3s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(224, 231, 255, 0.8);
+}
+
+.title-tier-9::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 25%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 40%);
+    animation: stars-twinkle 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Tier 10: 801-900 科学主宰 - Neon Cyan/Blue */
+.title-tier-10 {
+    background: linear-gradient(135deg, #0f172a 0%, #00f3ff 100%);
+    color: #ffffff;
+    border: 2px solid #00f3ff;
+    box-shadow:
+        0 0 20px rgba(0, 243, 255, 0.6),
+        inset 0 0 15px rgba(255, 255, 255, 0.2);
+    animation: pulse-glow 2s ease-in-out infinite;
+    text-shadow: 0 0 8px rgba(0, 243, 255, 0.8);
+}
+
+.title-tier-10::after {
+    content: '⚡';
+    position: absolute;
+    top: -8px;
+    right: -5px;
+    font-size: 12px;
+    animation: float-crown 2s ease-in-out infinite;
+}
+
+/* Tier 11: 901-1000 科学创世 - Emerald/Gold */
+.title-tier-11 {
+    background: linear-gradient(135deg, #064e3b 0%, #10b981 50%, #fbbf24 100%);
+    color: #ffffff;
+    border: 2px solid #34d399;
+    box-shadow:
+        0 0 25px rgba(16, 185, 129, 0.8),
+        0 0 50px rgba(251, 191, 36, 0.5);
+    animation: royal-glow 2.5s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+.title-tier-11::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+    animation: stars-twinkle 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Tier 12: 1001+ 科学之神 - Aurora/Rainbow */
+.title-tier-12 {
+    background: linear-gradient(135deg,
+            #ff0080 0%,
+            #ff8c00 15%,
+            #ffd700 30%,
+            #00ff00 45%,
+            #00bfff 60%,
+            #8a2be2 75%,
+            #ff0080 100%);
+    background-size: 300% 300%;
+    color: #ffffff;
+    border: 3px solid transparent;
+    position: relative;
+    box-shadow:
+        0 0 40px rgba(255, 0, 128, 0.6),
+        0 0 80px rgba(138, 43, 226, 0.4),
+        0 0 120px rgba(0, 191, 255, 0.3);
+    animation: aurora-flow 4s linear infinite, god-pulse 2s ease-in-out infinite;
+    text-shadow:
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 30px #ff0080;
+    font-size: 0.75em;
+    padding: 4px 12px;
+}
+
+.title-tier-12::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(90deg,
+            #ff0080, #ff8c00, #ffd700, #00ff00, #00bfff, #8a2be2, #ff0080);
+    background-size: 200% 100%;
+    border-radius: 23px;
+    z-index: -1;
+    animation: rainbow-move 1.5s linear infinite;
+}
+
+.title-tier-12::after {
+    content: '✨';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    animation: sparkle-burst 1s ease-in-out infinite;
+}
+
+/* ========================================
+   🎬 ANIMATIONS
+   ======================================== */
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.9);
+    }
+}
+
+@keyframes twinkle-star {
+
+    0%,
+    100% {
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.7);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(245, 158, 11, 1);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes gold-shine {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes rainbow-move {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+@keyframes rainbow-border {
+
+    0%,
+    100% {
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(30deg);
+    }
+}
+
+@keyframes royal-glow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 25px rgba(168, 85, 247, 0.7),
+            0 0 50px rgba(251, 191, 36, 0.4);
+    }
+
+    50% {
+        box-shadow:
+            0 0 35px rgba(168, 85, 247, 0.9),
+            0 0 70px rgba(251, 191, 36, 0.6);
+    }
+}
+
+@keyframes float-crown {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes cosmic-pulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 30px rgba(124, 58, 237, 0.8),
+            0 0 60px rgba(168, 85, 247, 0.4);
+        filter: brightness(1);
+    }
+
+    50% {
+        box-shadow:
+            0 0 50px rgba(124, 58, 237, 1),
+            0 0 100px rgba(168, 85, 247, 0.6);
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes stars-twinkle {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes aurora-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 300% 50%;
+    }
+}
+
+@keyframes god-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+@keyframes sparkle-burst {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1) rotate(0deg);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: translateX(-50%) scale(1.3) rotate(180deg);
+    }
+}
+
+
+
+.rank-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+}
+
+.rank-name-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+}
+
+.rank-name-text {
+    font-weight: 700;
+    color: #334155;
+    font-size: 1.4em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rank-class-tag {
+    font-size: 1em;
+    font-weight: 600;
+    color: #475569;
+    background: #e2e8f0;
+    padding: 3px 12px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.rank-score-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   🔒 SCORE EDIT CONTROLS
+   ======================================== */
+
+.score-edit-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.score-lock-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.score-lock-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.score-lock-btn.unlocked {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    animation: unlock-pulse 0.5s ease;
+}
+
+@keyframes unlock-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.score-adjust-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.4em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.score-adjust-btn:active {
+    transform: scale(0.9);
+}
+
+.score-minus-btn {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+    color: white;
+}
+
+.score-minus-btn:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+}
+
+.score-plus-btn {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    color: white;
+}
+
+.score-plus-btn:hover {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.5);
+}
+
+.score-adjust-controls {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    animation: slide-in 0.3s ease;
+}
+
+.score-adjust-controls.visible {
+    display: flex;
+}
+
+@keyframes slide-in {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.score-value {
+    min-width: 50px;
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #00cec9;
+}
+
+/* Student Selector Modal */
+.student-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    /* Custom Scrollbar for non-mouse wheel users */
+    scrollbar-width: thin;
+    scrollbar-color: #08d9d6 rgba(255, 255, 255, 0.1);
+}
+
+.student-grid::-webkit-scrollbar {
+    width: 20px;
+    /* Much wider for easier clicking */
+}
+
+.student-grid::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.student-grid::-webkit-scrollbar-thumb {
+    background-color: #08d9d6;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.student-grid::-webkit-scrollbar-thumb:hover {
+    background-color: #06b6b3;
+}
+
+.student-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.student-btn:hover {
+    background: rgba(8, 217, 214, 0.2);
+    border-color: #08d9d6;
+    transform: scale(1.05);
+}
+
+.student-btn.selected {
+    background: #ff2e63;
+    border-color: #ff2e63;
+    box-shadow: 0 0 10px rgba(255, 46, 99, 0.5);
+}

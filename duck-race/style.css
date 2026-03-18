@@ -1,0 +1,1318 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+
+body {
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow: hidden;
+    transition: background 1s ease;
+    /* 背景切换过渡 */
+}
+
+/* --- 背景样式定义 --- */
+.bg-sky {
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%);
+}
+
+.bg-water {
+    background: linear-gradient(to bottom, #1488CC 0%, #2B32B2 100%);
+}
+
+.bg-space {
+    background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+}
+
+.bg-snow {
+    background: linear-gradient(to bottom, #E6DADA, #274046);
+}
+
+.bg-autumn {
+    background: linear-gradient(to bottom, #ff9966, #ff5e62);
+}
+
+.bg-forest {
+    background: linear-gradient(to bottom, #134E5E, #71B280);
+}
+
+/* 粒子通用样式 */
+.particle {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 各种粒子动画 */
+@keyframes floatLeft {
+    from {
+        transform: translateX(120vw);
+    }
+
+    to {
+        transform: translateX(-20vw);
+    }
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(110vh) scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(-10vh) scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes fall {
+    from {
+        transform: translateY(-10vh) rotate(0deg);
+    }
+
+    to {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+@keyframes floatRandom {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(10px, -10px);
+    }
+
+    50% {
+        transform: translate(-5px, 10px);
+    }
+
+    75% {
+        transform: translate(-10px, -5px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+/* 金色奖杯脉动动画 */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* 火箭加速器样式 */
+.rocket-booster {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 25px;
+    z-index: -1;
+}
+
+/* 火焰喷射动画 - 向下喷射 */
+.rocket-flame {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35px;
+    height: 60px;
+    opacity: 0;
+}
+
+.rocket-flame.active {
+    animation: flameSpray 0.15s infinite alternate;
+}
+
+@keyframes flameSpray {
+    0% {
+        opacity: 1;
+        height: 50px;
+        filter: brightness(1.5) blur(1px);
+    }
+
+    100% {
+        opacity: 0.8;
+        height: 70px;
+        filter: brightness(2) blur(2px);
+    }
+}
+
+/* ==================== 新版排名特效系统 ==================== */
+
+.rank-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 皇冠样式与动画 */
+.rank-crown {
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 36px;
+    z-index: 10;
+    animation: crownFloat 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes crownFloat {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0) rotate(-3deg);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-8px) rotate(3deg);
+    }
+}
+
+.crown-gold {
+    color: #FFD700;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+.crown-silver {
+    color: #A0A0A0;
+    /* Darker silver/metallic */
+    text-shadow: 0 0 15px rgba(160, 160, 160, 0.9);
+}
+
+.crown-bronze {
+    color: #B87333;
+    text-shadow: 0 0 15px rgba(184, 115, 51, 0.9);
+}
+
+/* 荧光底光 */
+.rank-glow-aura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--effect-color) 0%, transparent 70%);
+    opacity: 0.8;
+    filter: blur(8px);
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.4);
+        opacity: 0.9;
+    }
+}
+
+/* 粒子绕转系统 */
+.rank-particles {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    transform: translate(-50%, -50%);
+    animation: particlesRotate 6s linear infinite;
+}
+
+@keyframes particlesRotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.rank-particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--effect-color);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--effect-color);
+    opacity: 1;
+}
+
+/* 粒子分布 */
+.p0 {
+    top: 10%;
+    left: 50%;
+}
+
+.p1 {
+    top: 25%;
+    left: 85%;
+}
+
+.p2 {
+    top: 50%;
+    left: 100%;
+}
+
+.p3 {
+    top: 75%;
+    left: 85%;
+}
+
+.p4 {
+    top: 90%;
+    left: 50%;
+}
+
+.p5 {
+    top: 75%;
+    left: 15%;
+}
+
+.p6 {
+    top: 50%;
+    left: 0%;
+}
+
+.p7 {
+    top: 25%;
+    left: 15%;
+}
+
+/* 金项链位置优化 */
+.gold-necklace {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45px;
+    height: 25px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* 排名颜色定义 */
+.rank-effect-1 {
+    --effect-color: #FFD700;
+}
+
+.rank-effect-2 {
+    --effect-color: #B0B0B0;
+}
+
+.rank-effect-3 {
+    --effect-color: #B87333;
+}
+
+.rank-effect-4 {
+    --effect-color: #3498db;
+}
+
+.rank-effect-5 {
+    --effect-color: #9b59b6;
+}
+
+.rank-effect-6 {
+    --effect-color: #2ecc71;
+}
+
+.rank-effect-7 {
+    --effect-color: #e91e63;
+}
+
+.rank-effect-8 {
+    --effect-color: #f39c12;
+}
+
+.rank-effect-9 {
+    --effect-color: #16a085;
+}
+
+.rank-effect-10 {
+    --effect-color: #f1c40f;
+}
+
+
+/* 分数线和终点线 */
+.score-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-top: 2px dashed rgba(100, 100, 100, 0.4);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.score-line::before {
+    content: attr(data-score);
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 24px;
+    /* 放大分数线数字字体 */
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(100, 150, 250, 0.5);
+}
+
+/* 终点线 */
+.finish-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80px;
+    height: 8px;
+    /* 提高终点线位置约20px */
+    background-image: linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
+        linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
+    background-position: 0 0, 10px 10px;
+    background-size: 20px 20px;
+    z-index: 5;
+    opacity: 0.5;
+    pointer-events: none;
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.finish-line::before {
+    content: "满分线，科学大牛";
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    color: #000000;
+    font-weight: 900;
+    font-size: 40px;
+    letter-spacing: 10px;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+}
+
+/* 赛道 */
+#race-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.duck-lane {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.duck-wrapper {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    width: 80px;
+    pointer-events: auto;
+    /* 关键：使用 will-change 优化性能，但移除 CSS transition 以便 JS 逐帧控制 */
+    will-change: transform;
+}
+
+.duck-wrapper:hover {
+    z-index: 999 !important;
+}
+
+.duck-wrapper:hover .duck-inner {
+    transform: scale(1.5);
+}
+
+.duck-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.duck-name {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 23px;
+    /* 放大字体1.3倍 (18*1.3≈23) */
+    margin-bottom: -6px;
+    white-space: nowrap;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #333;
+    z-index: 2;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(200, 200, 200, 0.3);
+}
+
+/* 比赛中名字半透明 */
+.duck-wrapper.racing .duck-name {
+    background: rgba(255, 255, 255, 0.6);
+    font-size: 21px;
+    /* 放大字体1.3倍 (16*1.3≈21) */
+    padding: 2px 6px;
+}
+
+/* hover时名字完全显示 */
+.duck-wrapper:hover .duck-name {
+    background: rgba(255, 255, 255, 0.98);
+    font-size: 22px;
+    /* 放大字体1.3倍 (17*1.3≈22) */
+    padding: 2px 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.duck-svg {
+    width: 48px;
+    height: 48px;
+    /* 缩小鸭子模型 */
+    filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* 滚动条 */
+.custom-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* 按钮与菜单动画 */
+.btn-icon:active {
+    transform: scale(0.9);
+}
+
+#settings-menu {
+    transform-origin: bottom left;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-hidden {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+    pointer-events: none;
+}
+
+.menu-visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+/* 排行榜面板动画 */
+#leaderboard-panel {
+    transition: opacity 0.3s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s, height 0.3s;
+}
+
+.panel-hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+    pointer-events: none;
+}
+
+.panel-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+}
+
+/* 皮肤/背景/模式选择器 */
+.option-card {
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.option-card:hover {
+    transform: scale(1.05);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.option-card.active {
+    border-color: #3b82f6;
+    background-color: rgba(219, 234, 254, 0.8);
+}
+
+/* 弹窗动画 */
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-modal-in {
+    animation: modalIn 0.2s ease-out;
+}
+
+/* 防伪标识样式 */
+.watermark {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.15;
+    font-size: 10px;
+    color: #000;
+    text-align: right;
+    line-height: 1.4;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+    transform: rotate(-5deg);
+    filter: blur(0.3px);
+}
+
+.watermark-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    background-image: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 200px,
+            rgba(0, 0, 0, 0.01) 200px,
+            rgba(0, 0, 0, 0.01) 400px);
+}
+
+.watermark-overlay::before {
+    content: '抖音@李翔在湘西 · 禁止商用';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 60px;
+    color: rgba(0, 0, 0, 0.02);
+    white-space: nowrap;
+    font-weight: 900;
+    letter-spacing: 20px;
+}
+
+/* 隐藏的版权信息（在HTML中） */
+.hidden-copyright {
+    display: none;
+    visibility: hidden;
+    position: absolute;
+    left: -9999px;
+}
+
+/* 新的大字体排行榜样式 (缩小0.6倍) */
+.leaderboard-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    touch-action: pan-y;
+}
+
+.leaderboard-content {
+    position: relative;
+    /* 添加相对定位，使关闭按钮相对于此容器定位 */
+    width: 90%;
+    max-width: 720px;
+    /* 1200 * 0.6 = 720 */
+    max-height: 85vh;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    /* 20 * 0.6 = 12 */
+    padding: 18px;
+    /* 30 * 0.6 = 18 */
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+    /* 20 * 0.6 = 12, 60 * 0.6 = 36 */
+    overflow: visible;
+    /* 改为 visible，以便内部按钮可以稍微超出边界 */
+    border: 2px solid #4f46e5;
+    /* 3 * 0.6 = 1.8 ≈ 2 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 新增滚动区域样式，确保标题和按钮固定 */
+#leaderboard-items {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 5px;
+}
+
+.leaderboard-title {
+    text-align: center;
+    font-size: 36px;
+    /* 60 * 0.6 = 36 */
+    font-weight: bold;
+    color: #2563eb;
+    margin-bottom: 18px;
+    /* 30 * 0.6 = 18 */
+    text-shadow: 1.2px 1.2px 2.4px rgba(0, 0, 0, 0.3);
+    /* 2 * 0.6 = 1.2, 4 * 0.6 = 2.4 */
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 24px;
+    /* 25 * 0.6 = 15, 40 * 0.6 = 24 */
+    margin-bottom: 9px;
+    /* 15 * 0.6 = 9 */
+    border-radius: 9px;
+    /* 15 * 0.6 = 9 */
+    background: white;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+    /* 8 * 0.6 = 4.8 ≈ 5, 20 * 0.6 = 12 */
+    border-left: 5px solid;
+    /* 8 * 0.6 = 4.8 ≈ 5 */
+    transition: all 0.3s ease;
+}
+
+.leaderboard-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+    /* 12 * 0.6 = 7.2 ≈ 7, 25 * 0.6 = 15 */
+}
+
+.rank-1 {
+    border-left-color: #FFD700;
+    background: linear-gradient(to right, #FFF8DC, #FFFFFF);
+}
+
+.rank-2 {
+    border-left-color: #C0C0C0;
+    background: linear-gradient(to right, #F5F5F5, #FFFFFF);
+}
+
+.rank-3 {
+    border-left-color: #CD7F32;
+    background: linear-gradient(to right, #FDF5E6, #FFFFFF);
+}
+
+.rank-4 {
+    border-left-color: #4ade80;
+    background: linear-gradient(to right, #F0FDF4, #FFFFFF);
+}
+
+.rank-5 {
+    border-left-color: #fbbf24;
+    background: linear-gradient(to right, #FEFCE8, #FFFFFF);
+}
+
+.rank-other {
+    border-left-color: #cbd5e1;
+    background: linear-gradient(to right, #F8FAFC, #FFFFFF);
+}
+
+.student-rank {
+    font-size: 30px;
+    /* 50 * 0.6 = 30 */
+    font-weight: bold;
+    width: 48px;
+    /* 80 * 0.6 = 48 */
+    text-align: center;
+    color: #4f46e5;
+}
+
+.student-name {
+    font-size: 36px;
+    /* 60 * 0.6 = 36 */
+    font-weight: bold;
+    color: #1e293b;
+    flex-grow: 1;
+    text-align: left;
+    margin-right: 18px;
+    /* 30 * 0.6 = 18 */
+}
+
+.student-score {
+    font-size: 42px;
+    /* 70 * 0.6 = 42 */
+    font-weight: 900;
+    color: #dc2626;
+    font-family: 'Arial Black', 'Courier New', sans-serif;
+    min-width: 90px;
+    /* 150 * 0.6 = 90 */
+    text-align: right;
+}
+
+.rank-icon {
+    font-size: 30px;
+    /* 50 * 0.6 = 30 */
+    margin-right: 9px;
+    /* 15 * 0.6 = 9 */
+    width: 36px;
+    text-align: center;
+}
+
+.rank-1-icon {
+    color: #FFD700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+.rank-2-icon {
+    color: #A0A0A0;
+    text-shadow: 0 0 8px rgba(160, 160, 160, 0.7);
+}
+
+.rank-3-icon {
+    color: #B87333;
+    text-shadow: 0 0 8px rgba(184, 115, 51, 0.7);
+}
+
+.rank-4-icon {
+    color: #4ade80;
+}
+
+.rank-5-icon {
+    color: #fbbf24;
+}
+
+.rank-6-icon {
+    color: #60a5fa;
+}
+
+.rank-7-icon {
+    color: #f472b6;
+}
+
+.rank-8-icon {
+    color: #34d399;
+}
+
+.rank-9-icon {
+    color: #f87171;
+}
+
+.rank-10-icon {
+    color: #a78bfa;
+}
+
+.rank-11-icon {
+    color: #fb923c;
+}
+
+.rank-12-icon {
+    color: #22d3ee;
+}
+
+.rank-13-icon {
+    color: #a3e635;
+}
+
+.rank-14-icon {
+    color: #eab308;
+}
+
+.rank-15-icon {
+    color: #ef4444;
+}
+
+.rank-16-icon {
+    color: #10b981;
+}
+
+.rank-17-icon {
+    color: #3b82f6;
+}
+
+.rank-18-icon {
+    color: #f97316;
+}
+
+.rank-19-icon {
+    color: #ec4899;
+}
+
+.rank-20-icon {
+    color: #8b5cf6;
+}
+
+/* 年级排行榜 21-30名 勇士级图标样式 */
+.grade-rank-tier-4 {
+    font-size: 26px;
+    filter: drop-shadow(0 1px 3px rgba(251, 146, 60, 0.4));
+}
+
+/* 年级排行榜 31-40名 新星级图标样式 */
+.grade-rank-tier-5 {
+    font-size: 22px;
+    opacity: 0.85;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+/* 年级排行榜 41-50名 种子级图标样式 */
+.grade-rank-tier-6 {
+    font-size: 20px;
+    opacity: 0.7;
+}
+
+/* 点赞容器样式 */
+.like-container {
+    margin-left: 12px;
+    min-width: 60px;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.like-btn:hover {
+    background: rgba(255, 240, 245, 0.95);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
+}
+
+.like-btn:active {
+    transform: scale(0.95);
+}
+
+.heart-icon {
+    font-size: 18px;
+    color: #a0d2ff;
+    transition: all 0.3s ease;
+    margin-bottom: 2px;
+}
+
+.like-count {
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+/* 点赞动画 */
+.liked {
+    animation: likePulse 0.5s ease;
+}
+
+@keyframes likePulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 点赞粒子效果 */
+.like-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: all 0.8s ease-out;
+}
+
+.close-leaderboard {
+    position: absolute;
+    top: -15px;
+    /* 向上偏移，使其紧贴右上角边缘 */
+    right: -15px;
+    /* 向右偏移，使其紧贴右上角边缘 */
+    background: #ef4444;
+    color: white;
+    border: 3px solid white;
+    /* 增加白色边框，增加视觉对比度 */
+    width: 36px;
+    /* 60 * 0.6 = 36 */
+    height: 36px;
+    /* 60 * 0.6 = 36 */
+    border-radius: 50%;
+    font-size: 17px;
+    /* 28 * 0.6 = 16.8 ≈ 17 */
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+    /* 8 * 0.6 = 4.8 ≈ 5, 20 * 0.6 = 12 */
+    transition: all 0.3s ease;
+    z-index: 2001;
+    /* 确保在最上层 */
+}
+
+.close-leaderboard:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* 321倒数动画样式 */
+.countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 120px;
+    font-weight: bold;
+    color: #FF6B6B;
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.countdown.show {
+    opacity: 1;
+}
+
+.countdown.zoom {
+    animation: zoomIn 0.5s ease-out;
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: translate(-50%, -50%) scale(0.1);
+        opacity: 0;
+    }
+
+    70% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* 班级按钮样式 */
+.class-btn {
+    padding: 6px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    font-size: 12px;
+    color: #475569;
+    transition: all 0.2s;
+    font-weight: bold;
+}
+
+.class-btn:hover {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* ====== 年级排行榜样式 ====== */
+
+/* 年级选择弹窗 - 覆盖层 */
+.grade-selector-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: pan-y;
+}
+
+/* 年级选择弹窗 - 内容 */
+.grade-selector-content {
+    position: relative;
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 20px;
+    padding: 40px 48px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    text-align: center;
+    max-width: 520px;
+    width: 90%;
+}
+
+.grade-selector-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.grade-selector-subtitle {
+    font-size: 16px;
+    color: #94a3b8;
+    margin-bottom: 32px;
+}
+
+.grade-selector-buttons {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+}
+
+/* 年级选择卡片 */
+.grade-card {
+    flex: 1;
+    padding: 28px 20px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.grade-card:hover {
+    transform: translateY(-6px) scale(1.03);
+}
+
+.grade-card:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
+.grade-card-5 {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe, #93c5fd);
+    border-color: #60a5fa;
+}
+
+.grade-card-5:hover {
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.35);
+    border-color: #3b82f6;
+}
+
+.grade-card-6 {
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8, #f9a8d4);
+    border-color: #f472b6;
+}
+
+.grade-card-6:hover {
+    box-shadow: 0 12px 32px rgba(236, 72, 153, 0.35);
+    border-color: #ec4899;
+}
+
+.grade-card-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.grade-card-label {
+    font-size: 24px;
+    font-weight: 900;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.grade-card-desc {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* 年级排行榜 - 加宽 */
+.grade-leaderboard-wide {
+    max-width: 800px !important;
+}
+
+/* 年级排行榜 - 信息栏 */
+.grade-leaderboard-info {
+    text-align: center;
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+/* 年级排行榜 - 滚动区域 */
+#grade-leaderboard-items {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 5px;
+}
+
+/* 班级标签样式 */
+.grade-class-tag {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    min-width: 52px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    margin-right: 12px;
+}
+
+/* ====== 流畅模式 - 关闭耗性能特效 ====== */
+
+/* 关闭所有 backdrop-filter（模糊效果非常耗 GPU） */
+.smooth-mode .backdrop-blur,
+.smooth-mode .backdrop-blur-sm,
+.smooth-mode [class*="backdrop-blur"],
+.smooth-mode #settings-menu,
+.smooth-mode .grade-selector-overlay,
+.smooth-mode .leaderboard-container,
+.smooth-mode #student-modal {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* 关闭所有 CSS 动画 */
+.smooth-mode *,
+.smooth-mode *::before,
+.smooth-mode *::after {
+    animation: none !important;
+    animation-duration: 0s !important;
+}
+
+/* 保留必要的 transition 但缩短时间 */
+.smooth-mode .nav-button,
+.smooth-mode .option-card,
+.smooth-mode .duck-inner,
+.smooth-mode .leaderboard-item,
+.smooth-mode .like-btn,
+.smooth-mode .class-btn,
+.smooth-mode .grade-card {
+    transition-duration: 0.05s !important;
+}
+
+/* 简化 box-shadow */
+.smooth-mode .duck-name,
+.smooth-mode .leaderboard-item,
+.smooth-mode .leaderboard-content,
+.smooth-mode .grade-selector-content,
+.smooth-mode .btn-icon {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* 关闭 filter 特效（drop-shadow 等） */
+.smooth-mode .duck-svg,
+.smooth-mode .rank-crown,
+.smooth-mode .rank-icon,
+.smooth-mode [class*="rank-"][class*="-icon"] {
+    filter: none !important;
+}
+
+/* 关闭 text-shadow */
+.smooth-mode .countdown,
+.smooth-mode .crown-gold,
+.smooth-mode .crown-silver,
+.smooth-mode .crown-bronze,
+.smooth-mode .finish-line::before,
+.smooth-mode .leaderboard-title {
+    text-shadow: none !important;
+}
+
+/* 关闭水印覆盖层的渐变背景 */
+.smooth-mode .watermark-overlay {
+    background-image: none !important;
+}
+
+/* 简化鸭子悬停效果 */
+.smooth-mode .duck-wrapper:hover .duck-inner {
+    transform: scale(1.2) !important;
+}
+
+/* 关闭排行榜项目的悬停缩放 */
+.smooth-mode .leaderboard-item:hover {
+    transform: none !important;
+}
+
+/* 关闭倒数动画的缩放效果，改为简单显示隐藏 */
+.smooth-mode .countdown.zoom {
+    animation: none !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+}
+
+/* 移除 will-change 以减少内存占用 */
+.smooth-mode .duck-wrapper {
+    will-change: auto !important;
+}
+
+/* 简化背景过渡 */
+.smooth-mode body {
+    transition: none !important;
+}

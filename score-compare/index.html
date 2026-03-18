@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级排名进步对比·科学勋章可视化工具</title>
+    <!-- 引入谷歌字体，增加高级感 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet"
+        crossorigin="anonymous">
+    <!-- 引入外部样式 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 动态背景容器 -->
+    <div class="bg-deco"></div>
+
+    <h1 class="header-title">科学探索进步之星 🚀</h1>
+
+    <!-- 控制区域 -->
+    <div class="controls-container">
+        <!-- 五年级模块 -->
+        <div class="grade-wrapper">
+            <button class="grade-btn g5" onclick="toggleMenu('menu-5', event)">五年级 🛸</button>
+            <div class="class-menu" id="menu-5">
+                <button class="class-btn" onclick="showBoard(5, 0, '五一班')">五一班</button>
+                <button class="class-btn" onclick="showBoard(5, 1, '五二班')">五二班</button>
+                <button class="class-btn" onclick="showBoard(5, 2, '五三班')">五三班</button>
+                <button class="class-btn" onclick="showBoard(5, 3, '五四班')">五四班</button>
+                <button class="class-btn" onclick="showBoard(5, 4, '五五班')">五五班</button>
+            </div>
+        </div>
+        <!-- 六年级模块 -->
+        <div class="grade-wrapper">
+            <button class="grade-btn g6" onclick="toggleMenu('menu-6', event)">六年级 🔭</button>
+            <div class="class-menu" id="menu-6">
+                <button class="class-btn" onclick="showBoard(6, 0, '六一班')">六一班</button>
+                <button class="class-btn" onclick="showBoard(6, 1, '六二班')">六二班</button>
+                <button class="class-btn" onclick="showBoard(6, 2, '六三班')">六三班</button>
+                <button class="class-btn" onclick="showBoard(6, 3, '六四班')">六四班</button>
+                <button class="class-btn" onclick="showBoard(6, 4, '六五班')">六五班</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计栏与列表容器 -->
+    <div class="stats-bar" id="statsBar"></div>
+    <div class="list-container" id="listContainer"></div>
+
+    <!-- 加载外部数据和逻辑脚本文档 -->
+    <!-- 注意：通过先后顺序先加载全班同学的历史以及当下成绩数据 -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

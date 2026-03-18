@@ -1,0 +1,1025 @@
+/* Base setups */
+body {
+    /* Much brighter background for classroom projectors */
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    overflow: hidden;
+    color: #1f2937;
+    /* Dark text for contrast */
+}
+
+/* Chest & Lock Animations */
+@keyframes lock-drop {
+    0% {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+    }
+
+    20% {
+        transform: translateY(-10px) rotate(-10deg);
+    }
+
+    100% {
+        transform: translateY(100px) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+.lock-falling {
+    animation: lock-drop 0.6s forwards ease-in;
+}
+
+/* Background Stars */
+.stars {
+    background: transparent;
+    /* Removed dark image, using CSS radial above */
+    z-index: 0;
+}
+
+/* Biology Motion Background */
+.bio-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.bio-item {
+    position: absolute;
+    opacity: 0.15;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes swim {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    33% {
+        transform: translate(100px, -50px) rotate(90deg) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-50px, 100px) rotate(180deg) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(360deg) scale(1);
+    }
+}
+
+@keyframes float-bubble {
+    0% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateY(-10vh) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.animate-swim {
+    animation: swim 20s infinite ease-in-out alternate;
+}
+
+.animate-bubble {
+    animation: float-bubble 10s infinite linear;
+}
+
+/* Orbital Movement System */
+#slots-container {
+    perspective: 2000px;
+}
+
+.slot-item {
+    position: absolute;
+    width: 180px;
+    height: 130px;
+    transition: left 0.5s ease-in-out, top 0.5s ease-in-out, transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.5s;
+    user-select: none;
+    padding: 10px;
+}
+
+/* Add a blur effect during fast movement */
+.slot-item.fast-moving {
+    filter: blur(1px) brightness(1.2);
+    transition: left 0.1s linear, top 0.1s linear;
+}
+
+/* Chest Container Styles */
+.chest-container {
+    width: 100%;
+    height: 100%;
+    perspective: 1000px;
+}
+
+.chest-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slot-front,
+.slot-back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Front is the "Cover" (Mystery Box) - Visible when NOT revealed (0deg) */
+.slot-front {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    border: 2px solid white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Initially at 0deg */
+    transform: rotateY(0deg);
+}
+
+/* Back is the Prize - Hidden initially (scipt.js adds .revealed to show this) */
+.slot-back {
+    /* At 180deg, so when inner rotates 180, this becomes 0 (visible) */
+    transform: rotateY(180deg);
+    background: white;
+}
+
+/* Hover effects */
+.slot-item:hover .slot-inner {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Custom Scrollbar Globally Hidden */
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+/* Modal and Leaderboard Scrollbar */
+.student-grid::-webkit-scrollbar {
+    width: 12px;
+}
+
+.student-grid::-webkit-scrollbar-track {
+    background: #fef08a;
+    /* yellow-200 */
+    border-radius: 8px;
+    margin-block: 4px;
+    /* padding top and bottom */
+}
+
+.student-grid::-webkit-scrollbar-thumb {
+    background: #eab308;
+    /* yellow-500 */
+    border-radius: 8px;
+    border: 3px solid #fef08a;
+    /* match the track to create spacing */
+}
+
+.student-grid::-webkit-scrollbar-thumb:hover {
+    background: #ca8a04;
+    /* yellow-600 */
+}
+
+/* ========================================
+   🧪 科学老师的百宝袋 - Treasure Box
+   ======================================== */
+
+.scientist-treasure-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 2px solid rgba(0, 243, 255, 0.5);
+    border-radius: 16px;
+    padding: 12px 16px;
+    width: 100%;
+    max-width: 220px;
+    backdrop-filter: blur(12px);
+    box-shadow:
+        0 0 20px rgba(0, 243, 255, 0.15),
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: visible;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scientist-treasure-box:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 0 30px rgba(0, 243, 255, 0.25),
+        0 12px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* 科学家头像 */
+.scientist-avatar-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+}
+
+.scientist-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #00f3ff;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+    object-fit: cover;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    animation: scientist-float 3s ease-in-out infinite;
+}
+
+@keyframes scientist-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* 闪烁粒子 */
+.scientist-sparkles {
+    position: absolute;
+    inset: -10px;
+    pointer-events: none;
+}
+
+.sparkle {
+    position: absolute;
+    font-size: 14px;
+    animation: sparkle-orbit 4s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+.sparkle.s1 {
+    top: 0;
+    right: -5px;
+    animation-delay: 0s;
+}
+
+.sparkle.s2 {
+    bottom: 5px;
+    left: -8px;
+    animation-delay: 1.3s;
+}
+
+.sparkle.s3 {
+    top: -5px;
+    left: 10px;
+    animation-delay: 2.6s;
+}
+
+@keyframes sparkle-orbit {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: translateY(-8px) scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* 科学老师名字 */
+.scientist-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    color: #00f3ff;
+    text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+    text-align: center;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+/* 积分条容器 */
+.treasure-bar-container {
+    width: 100%;
+    padding: 0 4px;
+}
+
+.treasure-bar-bg {
+    width: 100%;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid rgba(0, 243, 255, 0.3);
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 积分条填充 */
+.treasure-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff2e63, #ff8c00, #ffd700, #00ff88, #00f3ff);
+    background-size: 200% 100%;
+    border-radius: 8px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    animation: treasure-bar-flow 3s linear infinite;
+}
+
+@keyframes treasure-bar-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+/* 积分条光泽效果 */
+.treasure-bar-shine {
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: bar-shine 2.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes bar-shine {
+    0% {
+        left: -50%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+
+/* 积分条低积分警告 */
+.treasure-bar-fill.low-score {
+    background: linear-gradient(90deg, #ff2e63, #ff4757);
+    animation: treasure-bar-flow 3s linear infinite, low-score-pulse 1s ease-in-out infinite;
+}
+
+@keyframes low-score-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* 积分数字显示 */
+.treasure-score-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-top: 2px;
+}
+
+.treasure-label {
+    font-family: 'Varela Round', sans-serif;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.treasure-score-number {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #00f3ff;
+    text-shadow:
+        0 0 10px rgba(0, 243, 255, 0.6),
+        0 0 30px rgba(0, 243, 255, 0.3);
+    line-height: 1;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+/* 积分扣减动画 */
+.treasure-score-number.deducting {
+    animation: score-deduct 0.6s ease;
+}
+
+@keyframes score-deduct {
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.3);
+        color: #ff2e63;
+        text-shadow: 0 0 20px rgba(255, 46, 99, 0.8);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 低积分时数字变红 */
+.treasure-score-number.score-danger {
+    color: #ff2e63;
+    text-shadow:
+        0 0 10px rgba(255, 46, 99, 0.6),
+        0 0 30px rgba(255, 46, 99, 0.3);
+    animation: danger-blink 1.5s ease-in-out infinite;
+}
+
+@keyframes danger-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* 积分耗尽 */
+.treasure-score-number.score-empty {
+    color: #ef4444;
+    animation: empty-shake 0.5s ease;
+}
+
+@keyframes empty-shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+/* ========================================
+   ⚡ 流畅模式 - Performance Mode (Aggressive)
+   ======================================== */
+
+/* 隐藏所有纯装饰背景层 */
+body.perf-mode .bio-bg,
+body.perf-mode .planets,
+body.perf-mode .stars {
+    display: none !important;
+}
+
+/* 全局禁用 backdrop-filter（最大GPU杀手） */
+body.perf-mode,
+body.perf-mode *,
+body.perf-mode *::before,
+body.perf-mode *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* 禁用所有 box-shadow glow 效果 */
+body.perf-mode .scientist-treasure-box {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.perf-mode .scientist-avatar {
+    animation: none !important;
+    box-shadow: none !important;
+}
+
+body.perf-mode .scientist-sparkles {
+    display: none !important;
+}
+
+body.perf-mode .treasure-bar-fill {
+    animation: none !important;
+    background: linear-gradient(90deg, #00f3ff, #0891b2) !important;
+}
+
+body.perf-mode .treasure-bar-shine {
+    display: none !important;
+}
+
+/* 宝箱槽位 - GPU层定位，禁用所有过渡 */
+body.perf-mode .slot-item {
+    left: 0 !important;
+    top: 0 !important;
+    will-change: transform;
+    transition: none !important;
+}
+
+body.perf-mode .slot-item * {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* 禁用3D透视 - 减少合成层 */
+body.perf-mode #slots-container {
+    perspective: none !important;
+}
+
+body.perf-mode .chest-container {
+    perspective: none !important;
+}
+
+body.perf-mode .chest-wrapper {
+    transform-style: flat !important;
+}
+
+/* 中央面板 - 移除模糊和glow */
+body.perf-mode main .backdrop-blur-xl,
+body.perf-mode main .backdrop-blur-md,
+body.perf-mode main .backdrop-blur-sm {
+    backdrop-filter: none !important;
+}
+
+body.perf-mode .shadow-glow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 排行榜徽章 - 禁用所有动画和伪元素动画 */
+body.perf-mode .title-badge {
+    animation: none !important;
+    box-shadow: none !important;
+}
+
+body.perf-mode .title-badge::before,
+body.perf-mode .title-badge::after {
+    animation: none !important;
+    display: none !important;
+}
+
+/* 禁用悬浮缩放（避免重排） */
+body.perf-mode .slot-item:hover .slot-inner,
+body.perf-mode button:hover {
+    transform: none !important;
+}
+
+/* Modal 动画禁用 */
+body.perf-mode #student-modal>div {
+    animation: none !important;
+}
+
+/* 排行榜 - 禁用悬浮效果 */
+body.perf-mode .rank-item:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* 主容器背景 - 简化 */
+body.perf-mode main>div>div {
+    backdrop-filter: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 进度条简化 */
+body.perf-mode #loading-bar {
+    transition: width 0.1s linear !important;
+}
+
+/* ⭐ 群体加分 - 流畅模式优化 */
+
+/* 群体加分触发按钮 - 禁用光泽动画 */
+body.perf-mode .group-bonus-trigger-btn {
+    box-shadow: 0 4px 0 rgba(109, 40, 217, 0.7) !important;
+    transition: none !important;
+}
+
+body.perf-mode .group-bonus-trigger-btn::before {
+    display: none !important;
+}
+
+body.perf-mode .group-bonus-trigger-btn:hover {
+    transform: none !important;
+    filter: none !important;
+}
+
+/* 群体加分弹窗 - 禁用浮动动画和模糊 */
+body.perf-mode #group-bonus-modal>div,
+body.perf-mode #class-bonus-modal>div,
+body.perf-mode #individual-bonus-modal>div {
+    animation: none !important;
+    backdrop-filter: none !important;
+}
+
+/* 群体加分类型按钮 - 简化过渡和阴影 */
+body.perf-mode .group-bonus-type-btn {
+    transition: none !important;
+    box-shadow: none !important;
+}
+
+body.perf-mode .group-bonus-type-btn:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* 班级选择按钮（集体加分） - 简化 */
+body.perf-mode .class-bonus-select-btn {
+    transition: none !important;
+    box-shadow: none !important;
+}
+
+body.perf-mode .class-bonus-select-btn:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* 个人加分学生按钮 - 简化过渡和阴影 */
+body.perf-mode .individual-student-btn {
+    transition: none !important;
+}
+
+body.perf-mode .individual-student-btn:hover {
+    transform: none !important;
+}
+
+body.perf-mode .individual-student-btn.selected {
+    box-shadow: none !important;
+    transform: none !important;
+    background: #bbf7d0 !important;
+}
+
+/* 积分雨 - 流畅模式下减少粒子效果 */
+body.perf-mode .coin-rain-item {
+    filter: none !important;
+}
+
+/* 确认加分按钮 - 简化 */
+body.perf-mode #individual-bonus-modal button[onclick="confirmIndividualBonus()"] {
+    transition: none !important;
+    box-shadow: 0 4px 0 rgba(5, 150, 105, 1) !important;
+}
+
+body.perf-mode #individual-bonus-modal button[onclick="confirmIndividualBonus()"]:hover {
+    transform: none !important;
+}
+
+/* 流畅模式按钮激活态 */
+#perf-mode-btn.active {
+    background: rgba(8, 217, 214, 0.3) !important;
+    border-color: #08d9d6 !important;
+    box-shadow: 0 0 12px rgba(8, 217, 214, 0.4);
+}
+
+/* ========================================
+   🌧️ 积分雨动画 - Coin Rain
+   ======================================== */
+
+#coin-rain-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.coin-rain-item {
+    position: absolute;
+    top: -60px;
+    font-size: 2rem;
+    animation: coin-fall linear forwards;
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 0 6px rgba(255, 200, 0, 0.6));
+}
+
+@keyframes coin-fall {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+        transform: translateY(10vh) rotate(30deg) scale(1);
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(110vh) rotate(360deg) scale(0.8);
+        opacity: 0;
+    }
+}
+
+@keyframes bonus-text-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(30px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15) translateY(-10px);
+    }
+
+    70% {
+        transform: scale(0.95) translateY(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes bonus-text-out {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+.coin-rain-text-show {
+    animation: bonus-text-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+.coin-rain-text-hide {
+    animation: bonus-text-out 0.4s ease-in forwards !important;
+}
+
+/* 班级选择按钮 */
+.class-bonus-select-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 12px;
+    background: #fff;
+    border: 3px solid #fbbf24;
+    border-radius: 16px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #92400e;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 #f59e0b;
+}
+
+.class-bonus-select-btn:hover {
+    background: #fffbeb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #f59e0b;
+}
+
+.class-bonus-select-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #f59e0b;
+}
+
+/* ========================================
+   ⭐ 群体加分按钮 - Group Bonus Trigger
+   ======================================== */
+.group-bonus-trigger-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #fff;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #d946ef 100%);
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow:
+        0 4px 0 rgba(109, 40, 217, 0.7),
+        0 6px 20px rgba(139, 92, 246, 0.4);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1px;
+}
+
+.group-bonus-trigger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    animation: btn-shine 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes btn-shine {
+    0% {
+        left: -50%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+
+.group-bonus-trigger-btn:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 6px 0 rgba(109, 40, 217, 0.7),
+        0 10px 30px rgba(139, 92, 246, 0.5);
+    filter: brightness(1.1);
+}
+
+.group-bonus-trigger-btn:active {
+    transform: translateY(4px);
+    box-shadow:
+        0 0 0 rgba(109, 40, 217, 0.7),
+        0 2px 10px rgba(139, 92, 246, 0.3);
+}
+
+/* ========================================
+   ⭐ 群体加分类型选择按钮
+   ======================================== */
+.group-bonus-type-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: #fff;
+    border: 3px solid #e2e8f0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 0 #e2e8f0;
+}
+
+.group-bonus-type-btn.group-bonus-class-btn {
+    border-color: #fbbf24;
+    box-shadow: 0 4px 0 #f59e0b;
+}
+
+.group-bonus-type-btn.group-bonus-class-btn:hover {
+    background: #fffbeb;
+    border-color: #f59e0b;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 #f59e0b, 0 10px 20px rgba(245, 158, 11, 0.2);
+}
+
+.group-bonus-type-btn.group-bonus-individual-btn {
+    border-color: #34d399;
+    box-shadow: 0 4px 0 #10b981;
+}
+
+.group-bonus-type-btn.group-bonus-individual-btn:hover {
+    background: #ecfdf5;
+    border-color: #10b981;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 #10b981, 0 10px 20px rgba(16, 185, 129, 0.2);
+}
+
+.group-bonus-type-btn:active {
+    transform: translateY(4px) !important;
+    box-shadow: 0 0 0 transparent !important;
+}
+
+/* ========================================
+   👥 个人加分学生选中态
+   ======================================== */
+.individual-student-btn {
+    border: 2px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 8px 4px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: bold;
+    color: #374151;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.individual-student-btn:hover {
+    background: #dcfce7;
+    border-color: #86efac;
+    transform: translateY(-1px);
+}
+
+.individual-student-btn.selected {
+    background: linear-gradient(135deg, #bbf7d0, #86efac);
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+    transform: scale(1.03);
+}
+
+.individual-student-btn.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #16a34a;
+}
+
+.individual-student-btn {
+    position: relative;
+}
+
+/* 加分分数选择器按钮 */
+.bonus-points-btn {
+    min-width: 48px;
+    padding: 6px 12px;
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    background: #fff;
+    color: #15803d;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.bonus-points-btn:hover {
+    background: #dcfce7;
+    border-color: #22c55e;
+    transform: translateY(-1px);
+}
+
+.bonus-points-btn.selected {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    border-color: #15803d;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+    transform: scale(1.05);
+}
+
+body.perf-mode .bonus-points-btn {
+    transition: none !important;
+}
+
+body.perf-mode .bonus-points-btn:hover {
+    transform: none !important;
+}
+
+body.perf-mode .bonus-points-btn.selected {
+    transform: none !important;
+    box-shadow: none !important;
+    background: #22c55e !important;
+}
+
+/* Individual bonus grid scrollbar */
+#individual-bonus-grid::-webkit-scrollbar {
+    width: 12px;
+}
+
+#individual-bonus-grid::-webkit-scrollbar-track {
+    background: #dcfce7;
+    border-radius: 8px;
+    margin-block: 4px;
+}
+
+#individual-bonus-grid::-webkit-scrollbar-thumb {
+    background: #22c55e;
+    border-radius: 8px;
+    border: 3px solid #dcfce7;
+}
+
+#individual-bonus-grid::-webkit-scrollbar-thumb:hover {
+    background: #16a34a;
+}

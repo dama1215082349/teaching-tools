@@ -1,0 +1,23 @@
+@echo off
+chcp 65001 >nul
+title 科学课堂大抽奖 - 本地服务器
+
+echo.
+echo ══════════════════════════════════════════════════════════════
+echo   🎰 科学课堂大抽奖 - 正在启动本地服务器...
+echo ══════════════════════════════════════════════════════════════
+echo.
+
+cd /d "%~dp0"
+
+echo 📍 正在启动服务器，请稍候...
+echo.
+
+powershell -ExecutionPolicy Bypass -NoProfile -Command "& { Set-Location '%~dp0'; $ErrorActionPreference = 'Stop'; try { $listener = New-Object System.Net.HttpListener; $listener.Prefixes.Add('http://localhost:8080/'); $listener.Start(); Write-Host ''; Write-Host '✅ 服务器启动成功！' -ForegroundColor Green; Write-Host ''; Write-Host '════════════════════════════════════════════════════════════' -ForegroundColor Cyan; Write-Host '  📍 请在浏览器打开: http://localhost:8080' -ForegroundColor Yellow; Write-Host '  💾 点击保存后数据将自动保存到本地文件' -ForegroundColor White; Write-Host '  ⚠️  不要关闭此窗口！' -ForegroundColor Red; Write-Host '════════════════════════════════════════════════════════════' -ForegroundColor Cyan; Write-Host ''; $chromePathUser=Join-Path $env:LOCALAPPDATA 'Google\Chrome\Application\chrome.exe'; $chromePath='C:\Program Files\Google\Chrome\Application\chrome.exe'; $chromePath2='C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'; $edgePath='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'; $edgePath2='C:\Program Files\Microsoft\Edge\Application\msedge.exe'; if(Test-Path $chromePathUser){ Write-Host '🌐 使用 Chrome 打开...' -ForegroundColor Cyan; Start-Process $chromePathUser 'http://localhost:8080' } elseif(Test-Path $chromePath){ Write-Host '🌐 使用 Chrome 打开...' -ForegroundColor Cyan; Start-Process $chromePath 'http://localhost:8080' } elseif(Test-Path $chromePath2){ Write-Host '🌐 使用 Chrome 打开...' -ForegroundColor Cyan; Start-Process $chromePath2 'http://localhost:8080' } elseif(Test-Path $edgePath){ Write-Host '🌐 使用 Edge 打开...' -ForegroundColor Cyan; Start-Process $edgePath 'http://localhost:8080' } elseif(Test-Path $edgePath2){ Write-Host '🌐 使用 Edge 打开...' -ForegroundColor Cyan; Start-Process $edgePath2 'http://localhost:8080' } else { Write-Host '🌐 使用默认浏览器打开...' -ForegroundColor Cyan; Start-Process 'http://localhost:8080' }; $root = '%~dp0'; $mimeTypes = @{'.html'='text/html; charset=utf-8'; '.css'='text/css; charset=utf-8'; '.js'='application/javascript; charset=utf-8'; '.json'='application/json'}; while($listener.IsListening) { $ctx = $listener.GetContext(); $req = $ctx.Request; $res = $ctx.Response; $res.Headers.Add('Access-Control-Allow-Origin','*'); $res.Headers.Add('Access-Control-Allow-Methods','GET,POST,OPTIONS'); $res.Headers.Add('Access-Control-Allow-Headers','Content-Type'); $res.Headers.Add('Cache-Control','no-store, no-cache, must-revalidate'); $url = $req.Url.LocalPath; if($req.HttpMethod -eq 'OPTIONS') { $res.StatusCode=200; $res.Close(); continue }; if($req.HttpMethod -eq 'POST' -and $url -eq '/api/save') { $reader = New-Object System.IO.StreamReader($req.InputStream,[System.Text.Encoding]::UTF8); $body = $reader.ReadToEnd(); $reader.Close(); $data = $body | ConvertFrom-Json; $timeStr = Get-Date -Format 'yyyy/MM/dd HH:mm:ss'; $scores = $data.scores; $scoresJson = $scores | ConvertTo-Json -Compress; $count = 0; $scores.PSObject.Properties | ForEach-Object { if($_.Value -gt 0){$count++} }; $content = \"const SAVED_SCORES = $scoresJson;`nconst LAST_SAVED = '$timeStr';\"; [IO.File]::WriteAllText((Join-Path $root 'scores-data.js'), $content, [Text.Encoding]::UTF8); Write-Host \"✅ [$timeStr] 保存成功！$count 条记录\" -ForegroundColor Green; $json = '{\"success\":true,\"time\":\"'+$timeStr+'\",\"count\":'+$count+'}'; $buf = [Text.Encoding]::UTF8.GetBytes($json); $res.ContentType='application/json'; $res.ContentLength64=$buf.Length; $res.OutputStream.Write($buf,0,$buf.Length); $res.Close(); continue }; if($url -eq '/') { $url='/index.html' }; $file = Join-Path $root $url.TrimStart('/'); if(Test-Path $file -PathType Leaf) { $ext = [IO.Path]::GetExtension($file).ToLower(); $ct = $mimeTypes[$ext]; if(-not $ct){$ct='application/octet-stream'}; $bytes = [IO.File]::ReadAllBytes($file); $res.ContentType=$ct; $res.ContentLength64=$bytes.Length; $res.OutputStream.Write($bytes,0,$bytes.Length) } else { $res.StatusCode=404 }; $res.Close() } } catch { Write-Host ''; Write-Host '❌ 错误:' $_.Exception.Message -ForegroundColor Red; Write-Host ''; if($_.Exception.Message -like '*Access*' -or $_.Exception.Message -like '*使用*') { Write-Host '💡 提示: 端口 8080 可能被占用' -ForegroundColor Yellow; Write-Host '   请关闭其他使用该端口的程序后重试' -ForegroundColor Yellow } } }"
+
+echo.
+echo ══════════════════════════════════════════════════════════════
+echo   服务器已停止
+echo ══════════════════════════════════════════════════════════════
+echo.
+pause

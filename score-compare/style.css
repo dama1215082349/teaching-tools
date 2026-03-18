@@ -1,0 +1,822 @@
+:root {
+    --text-dark: #1E293B;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --btn-5: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+    --btn-6: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    background-color: #f8fafc;
+    background-image:
+        radial-gradient(at 0% 0%, hsl(200 90% 90% / 0.5) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsl(220 90% 90% / 0.5) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsl(160 90% 90% / 0.5) 0, transparent 50%),
+        linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    background-attachment: fixed;
+    color: var(--text-dark);
+    margin: 0;
+    padding: 15px 20px;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Background Deco */
+.bg-deco {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(56, 189, 248, 0.4);
+    border-radius: 50%;
+    animation: floatUp linear infinite;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(80vh) scale(1);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translateY(20vh) scale(1);
+    }
+
+    100% {
+        transform: translateY(-10vh) scale(0);
+        opacity: 0;
+    }
+}
+
+.sci-symbol {
+    position: absolute;
+    opacity: 0.25;
+    user-select: none;
+    animation: floatSymbol linear infinite;
+    filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.2));
+}
+
+@keyframes floatSymbol {
+    0% {
+        transform: translateY(110vh) rotate(0deg) scale(0.6);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.25;
+    }
+
+    90% {
+        opacity: 0.25;
+    }
+
+    100% {
+        transform: translateY(-20vh) rotate(360deg) scale(1.2);
+        opacity: 0;
+    }
+}
+
+.header-title {
+    text-align: center;
+    font-size: 2vw;
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    letter-spacing: 4px;
+    padding: 10px 0;
+}
+
+/* Top Grade Controls */
+.controls-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 10px;
+}
+
+.grade-wrapper {
+    position: relative;
+    z-index: 50;
+}
+
+.grade-btn {
+    font-size: 1.15vw;
+    font-weight: bold;
+    padding: 10px 36px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(5px);
+}
+
+.grade-btn.g5 {
+    background: var(--btn-5);
+}
+
+.grade-btn.g6 {
+    background: var(--btn-6);
+}
+
+.grade-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Class Selection Dropdown */
+.class-menu {
+    position: absolute;
+    top: calc(100% + 15px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px) scale(0.95);
+    transform-origin: top;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 340px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.class-menu.active {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+
+.class-btn {
+    padding: 12px 0;
+    font-size: 1vw;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 10px;
+    color: #475569;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.class-btn:hover {
+    background: #f0f9ff;
+    border-color: #38bdf8;
+    color: #0369a1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Stats Section */
+.stats-bar {
+    text-align: center;
+    font-size: 1.25vw;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 25px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+}
+
+.stats-bar.show {
+    opacity: 1;
+}
+
+.stats-bar span {
+    color: #0284c7;
+    font-size: 1.5vw;
+    margin: 0 4px;
+    font-weight: 800;
+}
+
+/* List Area */
+.list-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 80px;
+}
+
+.student-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    animation: cardEntrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+    transform: translateX(-30px);
+    border-left-style: solid;
+    border-left-width: 5px;
+    transition: all 0.3s ease;
+}
+
+.student-card:hover {
+    transform: translateX(5px) scale(1.02) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+@keyframes cardEntrance {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Card Elements */
+.stu-base {
+    flex: 1.1;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.stu-id {
+    font-size: 0.95vw;
+    color: #94a3b8;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+}
+
+.stu-name {
+    font-size: 1.35vw;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: 1px;
+}
+
+.stu-ranks {
+    flex: 3.5;
+    font-size: 1.35vw;
+    color: #475569;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.rank-box {
+    background: rgba(241, 245, 249, 0.6);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(203, 213, 225, 0.5);
+    font-weight: normal;
+}
+
+.rank-num {
+    color: #0f172a;
+    font-weight: normal;
+}
+
+.rank-arrow {
+    color: #38bdf8;
+    font-weight: bold;
+    font-size: 1.5vw;
+}
+
+.stu-progress {
+    flex: 1.5;
+    font-size: 1.35vw;
+    font-weight: 700;
+    color: #ef4444;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stu-progress span {
+    font-size: 1.35vw;
+    color: #dc2626;
+    margin: 0 4px;
+}
+
+.stu-medal {
+    flex: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.medal-icon {
+    font-size: 2.1vw;
+    user-select: none;
+}
+
+.medal-text {
+    font-size: 1.2vw;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* MEDALS CSS ANIMATIONS - VISUAL HIERARCHY */
+/* MEDALS CSS ANIMATIONS - VISUAL HIERARCHY (20 TIERS) */
+
+/* 级别 1-3：基础启蒙层（蓝/青/绿） */
+.medal-1 {
+    border-left-color: #81ecec;
+}
+
+.medal-1 .medal-icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+.medal-1 .medal-text {
+    color: #00cec9;
+}
+
+.medal-2 {
+    border-left-color: #55efc4;
+}
+
+.medal-2 .medal-icon {
+    animation: float 3s ease-in-out infinite reverse;
+}
+
+.medal-2 .medal-text {
+    color: #00b894;
+}
+
+.medal-3 {
+    border-left-color: #74b9ff;
+}
+
+.medal-3 .medal-icon {
+    animation: glowPulse 3s infinite;
+}
+
+.medal-3 .medal-text {
+    color: #0984e3;
+}
+
+/* 级别 4-6：物理探索层（黄/紫/蓝紫） */
+.medal-4 {
+    border-left-color: #ffeaa7;
+    border-left-width: 6px;
+}
+
+.medal-4 .medal-icon {
+    animation: glowPulse 2s infinite;
+}
+
+.medal-4 .medal-text {
+    color: #fdcb6e;
+}
+
+.medal-5 {
+    border-left-color: #a29bfe;
+    border-left-width: 6px;
+}
+
+.medal-5 .medal-icon {
+    animation: spin 8s linear infinite;
+}
+
+.medal-5 .medal-text {
+    color: #6c5ce7;
+}
+
+.medal-6 {
+    border-left-color: #c084fc;
+    border-left-width: 6px;
+    background: linear-gradient(to right, var(--card-bg), rgba(243, 232, 255, 0.4));
+}
+
+.medal-6 .medal-icon {
+    animation: glowPulse 1.5s infinite;
+    filter: drop-shadow(0 0 5px #c084fc);
+}
+
+.medal-6 .medal-text {
+    color: #a855f7;
+    font-style: italic;
+}
+
+/* 级别 7-10：星际观测层（银灰/亮银/紫黑/深蓝） */
+.medal-7 {
+    border-left-color: #b2bec3;
+    border-left-width: 7px;
+    margin: 1px -1px;
+}
+
+.medal-7 .medal-icon {
+    animation: spin 6s linear infinite;
+}
+
+.medal-7 .medal-text {
+    color: #636e72;
+}
+
+.medal-8 {
+    border-left-color: #dfe6e9;
+    border-left-width: 7px;
+    margin: 2px -2px;
+    background: linear-gradient(to right, var(--card-bg), rgba(223, 230, 233, 0.5));
+}
+
+.medal-8 .medal-icon {
+    animation: float 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 5px #b2bec3);
+}
+
+.medal-8 .medal-text {
+    color: #2d3436;
+}
+
+.medal-9 {
+    border-left-color: #94a3b8;
+    border-left-width: 8px;
+    margin: 2px -2px;
+    padding: 13px 25px;
+    border-radius: 13px;
+    background: linear-gradient(to right, var(--card-bg), rgba(241, 245, 249, 0.7));
+}
+
+.medal-9 .medal-icon {
+    animation: spin 4s linear infinite;
+}
+
+.medal-9 .medal-text {
+    color: #475569;
+}
+
+.medal-10 {
+    border-left-color: #38bdf8;
+    border-left-width: 8px;
+    margin: 3px -3px;
+    padding: 14px 26px;
+    border-radius: 14px;
+    background: linear-gradient(to right, var(--card-bg), rgba(224, 242, 254, 0.6));
+}
+
+.medal-10 .medal-icon {
+    animation: heartbeat 1.5s infinite alternate;
+    filter: drop-shadow(0 0 8px #38bdf8);
+}
+
+.medal-10 .medal-text {
+    color: #0284c7;
+}
+
+/* 级别 11-14：高能跃迁层（电光蓝/金黄/赤红/翠绿） */
+.medal-11 {
+    border-left-color: #0ea5e9;
+    border-left-width: 9px;
+    margin: 4px -4px;
+    padding: 14px 26px;
+    border-radius: 14px;
+    background: linear-gradient(to right, var(--card-bg), rgba(186, 230, 253, 0.7));
+}
+
+.medal-11 .medal-icon {
+    animation: heartbeat 1s infinite alternate;
+    filter: drop-shadow(0 0 10px #0ea5e9);
+}
+
+.medal-11 .medal-text {
+    color: #0369a1;
+}
+
+.medal-12 {
+    border-left-color: #facc15;
+    border-left-width: 9px;
+    margin: 5px -5px;
+    padding: 15px 27px;
+    border-radius: 15px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(254, 252, 232, 0.7));
+    box-shadow: 0 4px 10px rgba(250, 204, 21, 0.1);
+}
+
+.medal-12 .medal-icon {
+    animation: heartbeat 1s infinite alternate;
+    filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.8));
+    font-size: 2.2vw;
+}
+
+.medal-12 .medal-text {
+    color: #ca8a04;
+}
+
+.medal-13 {
+    border-left-color: #ef4444;
+    border-left-width: 10px;
+    margin: 6px -6px;
+    padding: 15px 27px;
+    border-radius: 15px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(254, 226, 226, 0.8));
+}
+
+.medal-13 .medal-icon {
+    animation: float 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px #ef4444);
+}
+
+.medal-13 .medal-text {
+    color: #b91c1c;
+}
+
+.medal-14 {
+    border-left-color: #10b981;
+    border-left-width: 10px;
+    margin: 7px -8px;
+    padding: 16px 28px;
+    border-radius: 16px;
+    background: linear-gradient(to right, var(--card-bg), rgba(209, 250, 229, 0.8));
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
+}
+
+.medal-14 .medal-icon {
+    animation: spin 5s linear infinite;
+    filter: drop-shadow(0 0 10px #10b981);
+}
+
+.medal-14 .medal-text {
+    color: #047857;
+    background: linear-gradient(45deg, #059669, #34d399);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 级别 15-18：宇宙奇观层（深邃紫/星光粉/极光红/曜日黄） */
+.medal-15 {
+    border-left-color: #3b82f6;
+    border-left-width: 11px;
+    margin: 8px -10px;
+    padding: 18px 30px;
+    border-radius: 17px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(239, 246, 255, 0.9));
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+}
+
+.medal-15 .medal-icon {
+    animation: spin 4s linear infinite reverse;
+    font-size: 2.3vw;
+    filter: drop-shadow(0 0 12px #3b82f6);
+}
+
+.medal-15 .medal-text {
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: flow 3s linear infinite;
+}
+
+.medal-16 {
+    border-left-color: #ec4899;
+    border-left-width: 11px;
+    margin: 9px -12px;
+    padding: 19px 31px;
+    border-radius: 18px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(252, 231, 243, 0.9));
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.2);
+}
+
+.medal-16 .medal-icon {
+    animation: shootingStar 1.5s infinite;
+    filter: drop-shadow(2px 2px 4px rgba(236, 72, 153, 0.5));
+    font-size: 2.4vw;
+}
+
+.medal-16 .medal-text {
+    background: linear-gradient(45deg, #db2777, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.medal-17 {
+    border-left-color: #f97316;
+    border-left-width: 12px;
+    margin: 10px -14px;
+    padding: 20px 32px;
+    border-radius: 19px;
+    background: linear-gradient(to right, var(--card-bg), rgba(254, 237, 212, 0.95));
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.25);
+}
+
+.medal-17 .medal-icon {
+    animation: shootingStar 1.2s infinite;
+    filter: drop-shadow(3px 3px 6px rgba(249, 115, 22, 0.6));
+    font-size: 2.5vw;
+}
+
+.medal-17 .medal-text {
+    color: #ea580c;
+    text-shadow: 0 2px 5px rgba(249, 115, 22, 0.3);
+    font-weight: 900;
+}
+
+.medal-18 {
+    border-left-color: #8b5cf6;
+    border-left-width: 12px;
+    margin: 12px -16px;
+    padding: 21px 33px;
+    border-radius: 20px;
+    background: linear-gradient(to right, var(--card-bg), rgba(233, 233, 254, 0.95));
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3) inset, 0 8px 25px rgba(139, 92, 246, 0.25);
+}
+
+.medal-18 .medal-icon {
+    font-size: 2.6vw;
+    filter: drop-shadow(0 0 12px #8b5cf6);
+    animation: ultimateGlow 2s infinite alternate;
+}
+
+.medal-18 .medal-text {
+    font-size: 1.25vw;
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+}
+
+/* 级别 19-20：终极创世层（流金/星系黑洞彩） */
+.medal-19 {
+    border-left-color: #eab308;
+    border-left-width: 14px;
+    margin: 14px -20px;
+    padding: 23px 35px;
+    border-radius: 22px;
+    background: linear-gradient(to right, var(--card-bg), rgba(254, 252, 232, 0.98));
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.3) inset, 0 10px 30px rgba(234, 179, 8, 0.3);
+}
+
+.medal-19 .medal-icon {
+    font-size: 3vw;
+    filter: drop-shadow(0 0 15px gold);
+    animation: ultimateGlow 1.5s infinite alternate;
+}
+
+.medal-19 .medal-text {
+    font-size: 1.4vw;
+    background: linear-gradient(135deg, #d97706, #fbbf24);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+    font-weight: 900;
+}
+
+.medal-20 {
+    border-left-color: #0f172a;
+    border-left-width: 16px;
+    margin: 18px -25px;
+    padding: 26px 40px;
+    border-radius: 24px;
+    background: linear-gradient(to right, var(--card-bg), rgba(226, 232, 240, 0.98));
+    box-shadow: 0 0 35px rgba(15, 23, 42, 0.2) inset, 0 12px 40px rgba(15, 23, 42, 0.4);
+    border-top: 2px solid rgba(15, 23, 42, 0.1);
+    border-bottom: 2px solid rgba(15, 23, 42, 0.1);
+}
+
+.medal-20 .medal-icon {
+    font-size: 3.5vw;
+    filter: drop-shadow(0 0 20px #475569);
+    animation: ultimateGlow 1s infinite alternate, spin 10s linear infinite;
+}
+
+.medal-20 .medal-text {
+    font-size: 1.6vw;
+    background: linear-gradient(135deg, #0f172a, #64748b, #0f172a);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: flow 3s linear infinite;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 3px #d8b4fe);
+        transform: scale(1);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 10px #a855f7);
+        transform: scale(1.08);
+    }
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes heartbeat {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.15);
+    }
+}
+
+@keyframes flow {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@keyframes shootingStar {
+    0% {
+        transform: translate(3px, -3px);
+    }
+
+    50% {
+        transform: translate(-3px, 3px);
+        filter: drop-shadow(6px -6px 8px rgba(239, 68, 68, 0.5));
+    }
+
+    100% {
+        transform: translate(3px, -3px);
+    }
+}
+
+@keyframes ultimateGlow {
+    from {
+        filter: drop-shadow(0 0 5px #facc15) brightness(1);
+        transform: scale(1);
+    }
+
+    to {
+        filter: drop-shadow(0 0 15px #f59e0b) brightness(1.1);
+        transform: scale(1.05);
+    }
+}
+
+.empty-state {
+    text-align: center;
+    color: #475569;
+    font-size: 1.4vw;
+    padding: 50px;
+    opacity: 0.8;
+    font-weight: 600;
+}
